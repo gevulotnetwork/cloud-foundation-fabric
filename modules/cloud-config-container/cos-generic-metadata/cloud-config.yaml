@@ -44,10 +44,13 @@ write_files:
       After=gcr-online.target docker.socket
       Wants=gcr-online.target docker.socket docker-events-collector.service
       [Service]
-      %{~ if length(users) > 0 ~}
-      Environment="HOME=/home/${users[0].username}"
+      %{~ if length(exec_start_pre) > 0 ~}
+      %{~ for pre_exec in exec_start_pre ~}
+      ExecStartPre=${pre_exec}
+      %{~ endfor ~}
       %{~ endif ~}
-      %{~ if authenticate_gcr ~}
+      %{~ if authenticate_gcr && length(users) > 0 ~}
+      Environment="HOME=/home/${users[0].username}"
       ExecStartPre=/usr/bin/docker-credential-gcr configure-docker
       %{~ endif ~}
       ExecStart=/usr/bin/docker run --rm --name=${container_name} \
