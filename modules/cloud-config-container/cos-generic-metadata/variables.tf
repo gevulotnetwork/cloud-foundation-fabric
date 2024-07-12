@@ -117,4 +117,5 @@ variable "users" {
 variable "exec_start_pre" {
   description = "A list of ExecStartPre commands to be run"
   type = list(string)
+  default = []
 }
