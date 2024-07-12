@@ -44,7 +44,7 @@ write_files:
       After=gcr-online.target docker.socket
       Wants=gcr-online.target docker.socket docker-events-collector.service
       [Service]
-      %{~ length(users) > 0 ~}
+      %{~ if length(users) > 0 ~}
       Environment="HOME=/home/${users[0].username}"
       %{~ endif ~}
       %{~ if authenticate_gcr ~}
