@@ -27,11 +27,12 @@ locals {
     users             = var.users
     authenticate_gcr  = var.authenticate_gcr
     run_as_first_user = var.run_as_first_user
+    exec_start_pre    = var.exec_start_pre
   }))
   files = {
     for path, attrs in var.files : path => {
-      content = attrs.content,
-      owner   = attrs.owner == null ? var.file_defaults.owner : attrs.owner,
+      content     = attrs.content,
+      owner       = attrs.owner == null ? var.file_defaults.owner : attrs.owner,
       permissions = (
         attrs.permissions == null
         ? var.file_defaults.permissions
