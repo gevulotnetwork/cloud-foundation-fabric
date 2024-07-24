@@ -70,12 +70,6 @@ variable "docker_args" {
   default     = null
 }
 
-variable "set_unit_install" {
-  description = "Set the Install section"
-  type        = bool
-  default     = false # to be backward compatible with current behavior
-}
-
 variable "file_defaults" {
   description = "Default owner and permissions for files."
   type = object({
@@ -120,8 +114,11 @@ variable "users" {
   ]
 }
 
-variable "exec_start_pre" {
-  description = "A list of ExecStartPre commands to be run"
-  type = list(string)
-  default = []
+variable "unit" {
+  type = object({
+    install        = optional(bool, false)
+    exec_start_pre = optional(list(string), [])
+    enable         = optional(bool, false)
+    start          = optional(bool, false)
+  })
 }

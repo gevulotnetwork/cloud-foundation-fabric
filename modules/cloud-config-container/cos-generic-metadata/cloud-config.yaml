@@ -50,7 +50,7 @@ write_files:
       %{~ if authenticate_gcr ~}
       ExecStartPre=/usr/bin/docker-credential-gcr configure-docker
       %{~ endif ~}
-      %{~ for cmd in exec_start_pre ~}
+      %{~ for cmd in unit.exec_start_pre ~}
       ExecStartPre=${cmd}
       %{~ endfor ~}
       ExecStart=/usr/bin/docker run --rm --name=${container_name} \
@@ -65,7 +65,7 @@ write_files:
       %{~ endfor ~}
         ${container_image} ${container_args}
       ExecStop=/usr/bin/docker stop ${container_name}
-      %{~ if set_unit_install ~}
+      %{~ if unit.install ~}
       [Install]
       WantedBy=multi-user.target
       %{~ endif ~}
@@ -84,9 +84,16 @@ bootcmd:
 %{ endfor ~}
 %{ endif ~}
 
-%{ if length(run_commands) > 0 ~}
+%{ if length(run_commands) > 0 || unit.enable || unit.start ~}
 runcmd:
 %{ for command in run_commands ~}
   - ${command}
 %{ endfor ~}
+# Do these after user specified run commands in case they need to set something up first
+%{ if unit.enable ~}
+  - systemctl enable ${container_name}.service
+%{ endif ~}
+%{ if unit.start ~}
+  - systemctl start ${container_name}.service
+%{ endif ~}
 %{ endif ~}
