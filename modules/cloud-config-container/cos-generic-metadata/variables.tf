@@ -121,4 +121,5 @@ variable "unit" {
     enable         = optional(bool, false)
     start          = optional(bool, false)
   })
+  default = {}
 }
