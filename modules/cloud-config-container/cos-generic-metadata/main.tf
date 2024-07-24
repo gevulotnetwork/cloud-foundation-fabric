@@ -27,6 +27,8 @@ locals {
     users             = var.users
     authenticate_gcr  = var.authenticate_gcr
     run_as_first_user = var.run_as_first_user
+    exec_start_pre    = var.exec_start_pre
+    set_unit_install  = var.set_unit_install
   }))
   files = {
     for path, attrs in var.files : path => {
