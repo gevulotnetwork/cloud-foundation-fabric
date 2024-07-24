@@ -65,8 +65,10 @@ write_files:
       %{~ endfor ~}
         ${container_image} ${container_args}
       ExecStop=/usr/bin/docker stop ${container_name}
+      %{~ if set_unit_install ~}
       [Install]
       WantedBy=multi-user.target
+      %{~ endif ~}
 %{ for path, data in files ~}
   - path: ${path}
     owner: ${lookup(data, "owner", "root")}

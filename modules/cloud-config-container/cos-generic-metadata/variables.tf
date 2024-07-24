@@ -70,6 +70,12 @@ variable "docker_args" {
   default     = null
 }
 
+variable "set_unit_install" {
+  description = "Set the Install section"
+  type        = bool
+  default     = false # to be backward compatible with current behavior
+}
+
 variable "file_defaults" {
   description = "Default owner and permissions for files."
   type = object({
