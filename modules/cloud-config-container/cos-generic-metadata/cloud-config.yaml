@@ -50,6 +50,9 @@ write_files:
       %{~ if authenticate_gcr ~}
       ExecStartPre=/usr/bin/docker-credential-gcr configure-docker
       %{~ endif ~}
+      %{~ for cmd in exec_start_pre ~}
+      ExecStartPre=${cmd}
+      %{~ endfor ~}
       ExecStart=/usr/bin/docker run --rm --name=${container_name} \
       %{~ if length(users) > 0 && run_as_first_user ~}
         --user=${users[0].uid} \
@@ -62,6 +65,8 @@ write_files:
       %{~ endfor ~}
         ${container_image} ${container_args}
       ExecStop=/usr/bin/docker stop ${container_name}
+      [Install]
+      WantedBy=multi-user.target
 %{ for path, data in files ~}
   - path: ${path}
     owner: ${lookup(data, "owner", "root")}
